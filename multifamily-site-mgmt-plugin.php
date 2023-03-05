@@ -64,8 +64,8 @@ add_action('init', 'create_unit_post_type');
 function wp11_plugin_menu()
 {
     add_menu_page(
-        'WP11 Plugin Admin Page', // page title
-        'WP11 Plugin', // menu title
+        'Multi-family Sites Plugin Admin Page', // page title
+        'Multi-family Sites', // menu title
         'manage_options', // capabilities
         'wp11_plugin', // menu slug
         'wp11_plugin_page' // function to output page contents

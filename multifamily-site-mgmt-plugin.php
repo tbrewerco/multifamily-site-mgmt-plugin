@@ -229,3 +229,27 @@ function handle_import_units()
 
 // hook handle_import_units to admin_post action
 add_action('admin_init', 'handle_import_units');
+
+// add floor plan id column to list of units
+function add_unit_custom_column($columns)
+{
+    // add new column with key 'floor_plan_id' after 'title'
+    $columns = array_slice($columns, 0, 2, true) +
+        array('floor_plan_id' => __('Floor Plan ID', 'wp11')) +
+        array_slice($columns, 2, count($columns) - 1, true);
+
+    return $columns;
+}
+
+add_filter('manage_unit_posts_columns', 'add_unit_custom_column');
+
+// output custom column data for unit post type
+function output_unit_custom_column($column_name, $post_id)
+{
+    if ($column_name == 'floor_plan_id') {
+        $floor_plan_id = get_post_meta($post_id, '_floor_plan_id', true);
+        echo esc_html($floor_plan_id);
+    }
+}
+
+add_action('manage_unit_posts_custom_column', 'output_unit_custom_column', 10, 2);

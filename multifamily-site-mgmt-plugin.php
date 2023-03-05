@@ -297,3 +297,16 @@ function plugin_enqueue_stylesheets()
 }
 
 add_action('wp_enqueue_scripts', 'plugin_enqueue_stylesheets');
+
+function custom_unit_template($template)
+{
+    global $post;
+
+    if ('unit' === $post->post_type) {
+        $template = plugin_dir_path(__FILE__) . 'templates/single-unit.php';
+    }
+
+    return $template;
+}
+
+add_filter('single_template', 'custom_unit_template');

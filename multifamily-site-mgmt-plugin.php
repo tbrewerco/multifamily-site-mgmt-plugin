@@ -289,3 +289,11 @@ function unit_meta_callback($post)
 
 // include file that provides shortcode for list of units organized by area
 include_once('shortcode.php');
+
+// enqueue stylesheets
+function plugin_enqueue_stylesheets()
+{
+    wp_enqueue_style('frontend-list-styles', plugin_dir_url(__FILE__) . 'frontend-list-styles.css');
+}
+
+add_action('wp_enqueue_scripts', 'plugin_enqueue_stylesheets');

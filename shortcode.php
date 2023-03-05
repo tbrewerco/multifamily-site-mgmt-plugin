@@ -21,15 +21,26 @@ function multifamily_shortcode()
     }
 
     // render the unit posts as an HTML list with links to each post
-    $html = '<h3>Units with an area of 1:</h3><ul>';
+    $html =
+        '<div class="multifamily_units">
+        <h4>Units by Area</hv>
+        <div class="lists">
+        <div class="list_one">
+        <h3>Area = 1:</h3>
+    <ul>';
     foreach ($units_area_one as $post) {
         $html .= '<li><a href="' . esc_url(get_permalink($post->ID)) . '">' . $post->post_title . '</a></li>';
     }
-    $html .= '</ul><h3>Units with an area greater than 1:</h3><ul>';
+    $html .=
+        '</div>
+        <div class="list_two">
+        </ul>
+    <h3>Area > 1:</h3>
+    <ul>';
     foreach ($units_area_greater_than_one as $post) {
         $html .= '<li><a href="' . esc_url(get_permalink($post->ID)) . '">' . $post->post_title . '</a></li>';
     }
-    $html .= '</ul>';
+    $html .= '</ul></div></div></div>';
 
     return $html;
 }

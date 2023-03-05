@@ -94,3 +94,138 @@ function wp11_plugin_page()
     </div>
 <?php
 }
+
+// get api .env variables without third party dependencies
+function get_api_info()
+{
+    $env_file = dirname(__FILE__) . '/.env';
+    $env_vars = parse_ini_file($env_file);
+    $api_info = [];
+
+    if (isset($env_vars['API_URL'])) {
+        $api_info['api_url'] = $env_vars['API_URL'];
+    }
+
+    if (isset($env_vars['API_KEY'])) {
+        $api_info['api_key'] = $env_vars['API_KEY'];
+    }
+
+    return $api_info;
+}
+
+// fetch unit data from sightmap api
+function fetch_unit_data()
+{
+    $api_info = get_api_info();
+    $api_url = $api_info['api_url'] . "/units?per-page=250";
+    $api_key = $api_info['api_key'];
+
+    $args = array(
+        'headers' => array(
+            'API-key' =>  $api_key
+        )
+    );
+
+    $response = wp_remote_get($api_url, $args);
+
+    if (is_wp_error($response)) {
+        echo 'There was an error fetching data from Sightmap';
+    } else {
+
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        return $data;
+    }
+}
+
+// import and post unit data
+function import_units()
+{
+    $data = fetch_unit_data();
+
+    if (!$data) {
+        echo 'There was an error importing units';
+        return;
+    }
+
+    $data = $data['data'];
+
+    // count number of units created
+    $unit_count = 0;
+
+    foreach ($data as $unit) {
+
+        if (empty($unit['unit_number'])) {
+            continue;
+        }
+
+        // set post title to unit number
+        $unit_title = $unit['unit_number'];
+
+        $unit_query = new WP_Query(
+            array(
+                'post_type' => 'unit',
+                'meta_query' => array(
+                    array(
+                        'key' => '_unit_number',
+                        'value' => $unit_title
+                    )
+                )
+            )
+        );
+
+        // if post doesn't exist, create posts
+        if (!$unit_query->have_posts()) {
+
+            // create new unit post
+            $new_unit = array(
+                'post_type' => 'unit',
+                'post_title' => $unit_title,
+                'post_status' => 'publish'
+            );
+
+            $unit_id = wp_insert_post($new_unit);
+
+            // update custom fields
+            update_post_meta($unit_id, '_asset_id', $unit['asset_id']);
+            update_post_meta($unit_id, '_building_id', $unit['building_id']);
+            update_post_meta($unit_id, '_floor_id', $unit['floor_id']);
+            update_post_meta($unit_id, '_floor_plan_id', $unit['floor_plan_id']);
+            update_post_meta($unit_id, '_area', $unit['area']);
+            update_post_meta($unit_id, '_unit_number', $unit_title);
+
+            $unit_count += 1;
+        }
+    }
+
+    return $unit_count;
+}
+
+// handle form submission
+function handle_import_units()
+{
+    // import units only when import units button is clicked
+    if (isset($_POST['import_units'])) {
+
+        // import units
+        try {
+            $num_imported = import_units();
+        } catch (Exception $e) {
+            echo 'Caught exception: ',  $e->getMessage();
+        }
+
+        if ($num_imported) {
+            $message = "{$num_imported} unit" . ($num_imported === 1 ? '' : 's') . ' imported.';
+            $class = 'notice notice-success is-dismissible';
+        } else {
+            $message = 'Import unsuccessful.';
+            $class = 'notice notice-error';
+        }
+
+        echo "<div class='{$class}'><p>{$message}</p></div>";
+    }
+}
+
+// hook handle_import_units to admin_post action
+add_action('admin_init', 'handle_import_units');

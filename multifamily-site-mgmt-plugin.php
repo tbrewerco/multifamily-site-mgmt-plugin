@@ -60,3 +60,37 @@ function create_unit_post_type()
 
 // hook post type creation function to init action
 add_action('init', 'create_unit_post_type');
+
+function wp11_plugin_menu()
+{
+    add_menu_page(
+        'WP11 Plugin Admin Page', // page title
+        'WP11 Plugin', // menu title
+        'manage_options', // capabilities
+        'wp11_plugin', // menu slug
+        'wp11_plugin_page' // function to output page contents
+    );
+}
+
+// hook menu function to admin menu page
+add_action('admin_menu', 'wp11_plugin_menu');
+
+// output contents of admin page
+function wp11_plugin_page()
+{
+?>
+    <div class="wrap">
+        <!-- escape, translate, print header -->
+        <h1><?php esc_html_e('Import Units', 'wp11'); ?></h1>
+        <p><?php esc_html_e('Click the button below to import units from the Sightmap API', 'wp11'); ?></p>
+
+        <div class="submit">
+            <form method="post">
+                <!-- verify form data submitted by current site, not from external source -->
+                <input type="hidden" name="wp11_import_units" value="<?php echo wp_create_nonce('wp11_import_units'); ?>">
+                <input type="submit" name="import_units" class="button button-primary" value="<?php esc_attr_e('Import Units', 'wp11'); ?>" />
+            </form>
+        </div>
+    </div>
+<?php
+}

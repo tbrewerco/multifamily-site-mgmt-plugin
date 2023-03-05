@@ -286,3 +286,6 @@ function unit_meta_callback($post)
     echo '<p><label for="floor_plan_id_field">' . __('Floor Plan ID', 'wp11') . '</label><br /><input type="text" id="floor_plan_id_field" name="unit_meta[floor_plan_id]" value="' . esc_attr($floor_plan_id) . '" /></p>';
     echo '<p><label for="area_field">' . __('Area', 'wp11') . '</label><br /><input type="text" id="area_field" name="unit_meta[area]" value="' . esc_attr($area) . '" /></p>';
 }
+
+// include file that provides shortcode for list of units organized by area
+include_once('shortcode.php');

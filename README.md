@@ -4,7 +4,7 @@ This is a WordPress plugin that imports unit data from the Sightmap API and crea
 
 ## Installation
 
-1. Download the plugin files and upload them to the `/wp-content/plugins/multi-family-site-management` directory or install it directly from the WordPress repository.
+1. Download the plugin files and upload them to the `/wp-content/plugins/multi-family-site-management` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 
 No extermal dependencies or plugins are required.
@@ -13,9 +13,7 @@ No extermal dependencies or plugins are required.
 
 ### Admin Page
 
-After installation, a new menu item titled 'WP11 Plugin' will appear in the WordPress admin sidebar. This menu item will take you to an admin page where you can trigger the API import process and view imported unit data.
-
-To import unit data from the Sightmap API, click the 'Import Units' button on the admin page. The plugin will fetch data from the API and create a custom post for each unit.
+After installation, a new menu item titled 'Multi-family Sites' will appear in the WordPress admin sidebar. This menu item will take you to an admin page where you can trigger the API import process by clicking the 'Import Units' button. The plugin will fetch data from the API and create a custom post for each unit. The units can be viewed by selecting the 'Units' option from the admin sidebar.
 
 ### Custom Post Type
 
@@ -25,7 +23,7 @@ The 'Unit' post type can be managed like any other post type. Users can edit ind
 
 ### Shortcode
 
-The plugin also includes a shortcode that can be used to display a styled list of unit posts on the front end of the site. The shortcode can be used by adding `[multifamily_units]` to a page or post content.
+The plugin also includes a shortcode that can be used to display a styled list of unit posts on the front end of the site. The shortcode can be used by adding `[multifamily_units]` to a page or post content. Each item in the list is a link to the individual unit's post.
 
 ## Customization
 

@@ -253,3 +253,36 @@ function output_unit_custom_column($column_name, $post_id)
 }
 
 add_action('manage_unit_posts_custom_column', 'output_unit_custom_column', 10, 2);
+
+// add custom fields to the unit
+function add_unit_custom_fields()
+{
+    add_meta_box(
+        'unit_meta',
+        'Unit Details',
+        'unit_meta_callback',
+        'unit',
+        'normal',
+        'default'
+    );
+}
+
+// display custom fields
+function unit_meta_callback($post)
+{
+    wp_nonce_field('unit_custom_fields_nonce', 'unit_custom_fields_nonce');
+
+    // sanitize and save any updates to the unit field 
+    $asset_id = get_post_meta($post->ID, '_asset_id', true);
+    $building_id = get_post_meta($post->ID, '_building_id', true);
+    $floor_id = get_post_meta($post->ID, '_floor_id', true);
+    $floor_plan_id = get_post_meta($post->ID, '_floor_plan_id', true);
+    $area = get_post_meta($post->ID, '_area', true);
+
+    // display fields
+    echo '<p><label for="asset_id_field">' . __('Asset ID', 'wp11') . '</label><br /><input type="text" id="asset_id_field" name="unit_meta[asset_id]" value="' . esc_attr($asset_id) . '" /></p>';
+    echo '<p><label for="building_id_field">' . __('Building ID', 'wp11') . '</label><br /><input type="text" id="building_id_field" name="unit_meta[building_id]" value="' . esc_attr($building_id) . '" /></p>';
+    echo '<p><label for="floor_id_field">' . __('Floor ID', 'wp11') . '</label><br /><input type="text" id="floor_id_field" name="unit_meta[floor_id]" value="' . esc_attr($floor_id) . '" /></p>';
+    echo '<p><label for="floor_plan_id_field">' . __('Floor Plan ID', 'wp11') . '</label><br /><input type="text" id="floor_plan_id_field" name="unit_meta[floor_plan_id]" value="' . esc_attr($floor_plan_id) . '" /></p>';
+    echo '<p><label for="area_field">' . __('Area', 'wp11') . '</label><br /><input type="text" id="area_field" name="unit_meta[area]" value="' . esc_attr($area) . '" /></p>';
+}

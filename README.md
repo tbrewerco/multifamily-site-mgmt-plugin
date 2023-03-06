@@ -5,7 +5,7 @@ This is a WordPress plugin that imports unit data from the Sightmap API and crea
 ## Installation
 
 1. Download the plugin files and upload them to the `/wp-content/plugins/multi-family-site-management` directory.
-2. Create a .env file in the plugin directory. 
+2. Create a .env file in the `/wp-content/plugins/multi-family-site-management` directory. 
 3. Add Sightmap API credentials to the .env file. Use the following format: API_URL=<url> and API_KEY=<key>
 4. Activate the plugin through the 'Plugins' menu in WordPress.
 
